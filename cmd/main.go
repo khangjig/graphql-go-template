@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/pkg/errors"
 	"graphql-go-template/client/mysql"
 	"graphql-go-template/config"
 	"graphql-go-template/datastores"
@@ -30,14 +31,14 @@ func main() {
 	go func() {
 		err := http.ListenAndServe("localhost:1997", nil)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(errors.Wrap(err, "listen and serve"))
 		}
 	}()
 	// setup locale
 	{
 		loc, err := time.LoadLocation("Asia/Ho_Chi_Minh")
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(errors.Wrap(err, "location"))
 			os.Exit(1)
 		}
 		time.Local = loc
@@ -51,9 +52,9 @@ func main() {
 	useCase := usecase.New(repo)
 
 	// graphql
-	gql, err := graphql.NewHandler(repo)
+	gql, err := graphql.Handler(repo)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(errors.Wrap(err, "graphql"))
 	}
 
 	l, err := net.Listen("tcp", ":"+cfg.Port)
