@@ -8,7 +8,6 @@ spec:
   ports:
     - name: http
       port: 3000
-      appProtocol: TCP
       nodePort: 30112
       targetPort: 3000
   selector:
