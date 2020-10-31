@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-web-service
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 3000
+      appProtocol: TCP
+      nodePort: 30112
+      targetPort: 3000
+  selector:
+    name: go-web-app

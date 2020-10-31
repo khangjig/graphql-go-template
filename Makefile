@@ -2,6 +2,7 @@
 
 build:
 	go build -ldflags "-s -w" -o ./tmp/server ./cmd/main.go
+	env GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o ./tmp/linux ./cmd/main.go
 
 local-db:
 	@docker-compose down
