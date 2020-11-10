@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-web-service
+  namespace: demo-kube
+spec:
+  #  NodePort: trỏ port ra ngoài
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      # port: port của pods để các pods có thể giao tiếp được với nhau
+      port: 3000
+
+      # nodePort: port để bên ngoài gọi vào pod
+      # nodePort: 30112
+
+      # targetPort: port của deployment (targetPort: http = targetPort: 80)
+      # targetPort: http
+  selector:
+    name: go-web-app

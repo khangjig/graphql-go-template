@@ -3,8 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: go-web-application-db
+  namespace: demo-kube
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       name: go-web-db
@@ -17,6 +18,11 @@ spec:
         - name: db
           image: mysql:latest
           imagePullPolicy: IfNotPresent
+#          resources:
+#            requests:
+#              ephemeral-storage: "2Gi"
+#            limits:
+#              ephemeral-storage: "4Gi"
           ports:
             - containerPort: 3306
           env:
