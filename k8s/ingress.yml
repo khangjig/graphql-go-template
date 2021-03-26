@@ -7,12 +7,14 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: "demo-letsencrypt"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
 spec:
   tls:
     - hosts:
       - api.health-check.cf
+      - www.health-check.cf
       - health-check.cf
-      secretName: quickstart-demo-tls
+      secretName: quickstart-demo-tls2
   rules:
     - host: api.health-check.cf
       http:
