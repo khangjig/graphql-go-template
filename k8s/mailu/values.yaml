@@ -1,0 +1,140 @@
+domain: mail.healch-check.cf
+hostnames:
+  - mail.healch-check.cf
+secretKey: mypassword
+
+initialAccount:
+  username: admin
+  domain: mail.healch-check.cf
+  password: mypassword
+
+passwordScheme: PBKDF2
+
+clusterDomain: cluster.local
+
+database:
+  type: sqlite
+  roundcubeType: sqlite
+
+persistence:
+  size: 10Gi
+  accessMode: ReadWriteOnce
+  existingClaim: mail-volume
+#  storageClass: openebs-hostpath-retain
+
+subnet: 10.42.0.0/16
+
+logLevel: WARNING
+
+mail:
+  messageSizeLimitInMegabytes: 50
+  authRatelimit: 10/minute;1000/hour
+
+certmanager:
+  issuerType: ClusterIssuer
+  issuerName: demo-letsencrypt
+
+mailuVersion: 1.8
+
+front:
+  image:
+    repository: mailu/nginx
+    # tag: master
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 32m
+    limits:
+      memory: 200Mi
+      cpu: 200m
+
+admin:
+  image:
+    repository: mailu/admin
+    # tag: master
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 32m
+    limits:
+      memory: 500Mi
+      cpu: 500m
+
+redis:
+  image:
+    repository: redis
+    tag: 5-alpine
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 32m
+    limits:
+      memory: 300Mi
+      cpu: 200m
+
+postfix:
+  image:
+    repository: mailu/postfix
+    # tag: master
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 32m
+    limits:
+      memory: 2Gi
+      cpu: 500m
+
+dovecot:
+  image:
+    repository: mailu/dovecot
+    # tag: master
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 32m
+    limits:
+      memory: 500Mi
+      cpu: 500m
+
+rspamd:
+  image:
+    repository: mailu/rspamd
+    # tag: master
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 32m
+    limits:
+      memory: 200Mi
+      cpu: 200m
+
+clamav:
+  enabled: false
+  image:
+    repository: mailu/clamav
+    # tag: master
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 32m
+    limits:
+      memory: 2Gi
+      cpu: 1000m
+
+roundcube:
+  enabled: true
+  image:
+    repository: mailu/roundcube
+    # tag: master
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 32m
+    limits:
+      memory: 200Mi
+      cpu: 200m
+webdav:
+  enabled: false
+  image:
+    repository: mailu/radicale
+    # tag: master
