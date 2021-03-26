@@ -1,5 +1,5 @@
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: go-service-ingress
@@ -8,15 +8,13 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: khang.test
+    - host: api.health-check.cf
       http:
         paths:
-        - backend:
-            serviceName: go-web-service
-            servicePort: 3000
-#          path: /
-    # This section is only required if TLS is to be enabled for the Ingress
-#  tls:
-#    - hosts:
-#        - khang.test
-#      secretName: example-tls
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: go-web-service
+                port:
+                  number: 3000

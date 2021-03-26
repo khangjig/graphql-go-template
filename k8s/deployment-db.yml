@@ -1,4 +1,48 @@
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  labels:
+    app: mysql
+  namespace: demo-kube
+data:
+  default_auth: |
+    [mysqld]
+    default_authentication_plugin= mysql_native_password
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+  namespace: demo-kube
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  namespace: demo-kube
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,11 +62,11 @@ spec:
         - name: db
           image: mysql:latest
           imagePullPolicy: IfNotPresent
-#          resources:
-#            requests:
-#              ephemeral-storage: "2Gi"
-#            limits:
-#              ephemeral-storage: "4Gi"
+          #          resources:
+          #            requests:
+          #              ephemeral-storage: "2Gi"
+          #            limits:
+          #              ephemeral-storage: "4Gi"
           ports:
             - containerPort: 3306
           env:
@@ -34,3 +78,16 @@ spec:
               value: "test"
             - name: MYSQL_PASSWORD
               value: "test"
+          volumeMounts:
+            - name: mysql-config-volume
+              mountPath: /etc/mysql/conf.d/default_auth.cnf
+              subPath: default_auth
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-config-volume
+          configMap:
+            name: mysql-config
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
