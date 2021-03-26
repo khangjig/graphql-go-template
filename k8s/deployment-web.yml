@@ -1,0 +1,22 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-web
+  namespace: demo-kube
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: demo-web
+  template:
+    metadata:
+      labels:
+        name: demo-web
+    spec:
+      containers:
+        - name: application
+          image: khangle812/demo-react
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
