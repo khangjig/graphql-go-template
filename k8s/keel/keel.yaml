@@ -1,0 +1,34 @@
+helmProvider:
+  version: v3
+basicauth:
+  enabled: true
+  user: khangtest
+  password: mypassword
+#slack:
+#  enabled: false
+#  botName: keel
+#  token: example-token
+#  channel: k8s
+service:
+  enabled: true
+  type: NodePort
+persistence:
+  enabled: true
+  storageClass: manual
+  size: 50Mi
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.org/proxy-read-timeout: "5m"
+    cert-manager.io/cluster-issuer: demo-letsencrypt
+  hosts:
+    - host: keel.health-check.cf
+      paths:
+        - /
+  tls:
+    - secretName: keel-tls
+      hosts:
+        - keel.health-check.cf
